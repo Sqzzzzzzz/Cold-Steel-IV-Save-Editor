@@ -1,0 +1,16 @@
+{
+  "version": "0.1.2-preview",
+  "platform": "Windows",
+  "frozen": false,
+  "checks": [
+    "batch validation is atomic and preserves all non-inventory bytes",
+    "Unicode paths, save copy, no-overwrite and undo work",
+    "CSV export is UTF-8 and cannot overwrite the opened save",
+    "overwrite creates a verified backup and resets the edit baseline",
+    "all 146 bundled original PNG hashes match the manifest, including 31 CS4 master textures",
+    "demo icons resolve to native CS4 master textures or family artwork without CS3 item-ID mapping",
+    "UI fonts contain Latin, Cyrillic and numeric glyphs in both languages",
+    "real Qt window renders RU/EN, background and original icons without English UI Cyrillic leaks"
+  ],
+  "status": "passed"
+}

@@ -1,0 +1,44 @@
+# Python and local environments
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.qt-preview-venv/
+.venv/
+venv/
+.coverage
+htmlcov/
+
+# Generated builds and checks
+build/
+dist/
+release/
+diagnostic/
+checks/
+*.spec
+*.log
+*.tmp
+
+# Personal saves, game tables and archives
+*.dat
+*.pc
+*.bak
+*.tbl
+*.pkg
+*.pka
+*.p3a
+*.phyre
+*.zip
+catalog_scanned.json
+catalog_english.json
+catalog_overrides.json
+settings.json
+CS4InventoryEditor_BETA/
+
+# Local-only notes and editor files
+HANDOFF.md
+.env
+.env.*
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store
