@@ -19,6 +19,6 @@
 EXE не подписан сертификатом. Сравните SHA-256 архива с отдельным `SHA256SUMS.txt` из того же релиза. Не отключайте защиту ради непроверенного файла.
 
 Документация, обновления и сообщения об ошибках:
-https://github.com/Sqzzzzzzz/Cold-Steel-IV-Save-Editor.
+https://github.com/Sqzzzzzzz/Cold-Steel-IV-Save-Editor
 
 MIT-лицензия проекта не распространяется на сторонние библиотеки и игровые изображения. См. LICENSE, THIRD_PARTY_NOTICES.md и LICENSES/.

@@ -4,14 +4,14 @@
 
 **Редактор инвентаря и сохранений Trails of Cold Steel IV — NISA PC для Windows**
 
-[![Релиз](https://img.shields.io/badge/release-v1.0.0-b8212f)](https://github.com/Sqzzzzzzz/Cold-Steel-IV-Save-Editor./releases/latest)
+[![Релиз](https://img.shields.io/badge/release-v1.0.0-b8212f)](https://github.com/Sqzzzzzzz/Cold-Steel-IV-Save-Editor/releases/latest)
 ![Windows x64](https://img.shields.io/badge/Windows-x64-3278c8)
 ![Языки](https://img.shields.io/badge/interface-RU%20%2F%20EN-8b5cf6)
 [![Лицензия кода](https://img.shields.io/badge/code-MIT-6b7280)](LICENSE)
 
 [English](README.md) · **Русский**
 
-[Скачать v1.0.0](https://github.com/Sqzzzzzzz/Cold-Steel-IV-Save-Editor./releases/tag/v1.0.0) · [Начало работы](#начало-работы) · [Совместимость](#совместимость) · [Решение проблем](#решение-проблем)
+[Скачать v1.0.0](https://github.com/Sqzzzzzzz/Cold-Steel-IV-Save-Editor/releases/tag/v1.0.0) · [Начало работы](#начало-работы) · [Совместимость](#совместимость) · [Решение проблем](#решение-проблем)
 
 <img src="docs/screenshots/inventory-ru.png" alt="Настоящий русский интерфейс редактора: инвентарь и мастер-кварцы" width="1100">
 
@@ -35,7 +35,7 @@
 
 ## Скачивание
 
-Откройте **[последний релиз](https://github.com/Sqzzzzzzz/Cold-Steel-IV-Save-Editor./releases/latest)** и скачайте:
+Откройте **[последний релиз](https://github.com/Sqzzzzzzz/Cold-Steel-IV-Save-Editor/releases/latest)** и скачайте:
 
 - `Cold_Steel_IV_Inventory_Editor_v1.0.0_Windows_x64.zip` — готовую программу.
 - `SHA256SUMS.txt` — контрольную сумму архива.
@@ -118,14 +118,14 @@ Get-FileHash .\Cold_Steel_IV_Inventory_Editor_v1.0.0_Windows_x64.zip -Algorithm 
 | Перезапись заблокирована | Исходный файл мог измениться после открытия; сохраните отдельную копию и осознанно откройте файл заново |
 | EXE не запускается | Распакуйте ZIP, используйте x64-сборку, проверьте журнал безопасности Windows и сообщите точную ошибку |
 
-Об ошибках сообщайте в [Issues](https://github.com/Sqzzzzzzz/Cold-Steel-IV-Save-Editor./issues): версия, Windows, действия и скриншот. Не публикуйте личные сохранения и игровые таблицы.
+Об ошибках сообщайте в [Issues](https://github.com/Sqzzzzzzz/Cold-Steel-IV-Save-Editor/issues): версия, Windows, действия и скриншот. Не публикуйте личные сохранения и игровые таблицы.
 
 ## Разработка
 
 Нужен 64-битный **Python 3.10–3.14**. Релиз собирается на Python 3.14.
 
 ```powershell
-git clone https://github.com/Sqzzzzzzz/Cold-Steel-IV-Save-Editor..git Cold-Steel-IV-Save-Editor
+git clone https://github.com/Sqzzzzzzz/Cold-Steel-IV-Save-Editor.git Cold-Steel-IV-Save-Editor
 cd Cold-Steel-IV-Save-Editor
 py -3.14 -m venv .qt-preview-venv
 .\.qt-preview-venv\Scripts\python.exe -m pip install -r requirements-release.txt

@@ -27,7 +27,7 @@ The checked build runs the full suite and source self-test, creates the EXE, ver
 
 Сборка выполняет полный набор тестов и самопроверку исходников, проверяет иконку, версию и GUI-режим EXE. Самопроверки EXE запускаются вне исходников, с отдельным APPDATA и без Python/среды разработки в PATH. Затем создаются ZIP по разрешённому списку файлов и SHA-256.
 
-GitHub Actions also checks Python 3.10/3.14 on Windows and runs the same checked build. Its actual status is available in [Windows release runs](https://github.com/Sqzzzzzzz/Cold-Steel-IV-Save-Editor./actions/workflows/windows.yml). A matching version tag can publish only after required jobs succeed. A failed build or test prevents asset publication.
+GitHub Actions also checks Python 3.10/3.14 on Windows and runs the same checked build. Its actual status is available in [Windows release runs](https://github.com/Sqzzzzzzz/Cold-Steel-IV-Save-Editor/actions/workflows/windows.yml). A matching version tag can publish only after required jobs succeed. A failed build or test prevents asset publication.
 
 Independent release audit found and verified fixes for retained modal dialogs/menus, malformed catalog character metadata, and an unowned startup timer surviving its window. The timer keeps the same 360 ms delay. No theme, geometry, font or artwork changes were made.
 

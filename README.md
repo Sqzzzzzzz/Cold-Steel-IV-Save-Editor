@@ -4,14 +4,14 @@
 
 **A Windows inventory and save editor for Trails of Cold Steel IV — NISA PC**
 
-[![Release](https://img.shields.io/badge/release-v1.0.0-b8212f)](https://github.com/Sqzzzzzzz/Cold-Steel-IV-Save-Editor./releases/latest)
+[![Release](https://img.shields.io/badge/release-v1.0.0-b8212f)](https://github.com/Sqzzzzzzz/Cold-Steel-IV-Save-Editor/releases/latest)
 ![Windows x64](https://img.shields.io/badge/Windows-x64-3278c8)
 ![Languages](https://img.shields.io/badge/interface-EN%20%2F%20RU-8b5cf6)
 [![Code license](https://img.shields.io/badge/code-MIT-6b7280)](LICENSE)
 
 **English** · [Русский](README_RU.md)
 
-[Download v1.0.0](https://github.com/Sqzzzzzzz/Cold-Steel-IV-Save-Editor./releases/tag/v1.0.0) · [Getting started](#getting-started) · [Compatibility](#compatibility) · [Troubleshooting](#troubleshooting)
+[Download v1.0.0](https://github.com/Sqzzzzzzz/Cold-Steel-IV-Save-Editor/releases/tag/v1.0.0) · [Getting started](#getting-started) · [Compatibility](#compatibility) · [Troubleshooting](#troubleshooting)
 
 <img src="docs/screenshots/catalog-en.png" alt="The real English item catalog and item details" width="1100">
 
@@ -35,7 +35,7 @@ Browse the installed game's item catalog, edit inventory quantities, and review 
 
 ## Download
 
-Open the **[latest release](https://github.com/Sqzzzzzzz/Cold-Steel-IV-Save-Editor./releases/latest)** and download:
+Open the **[latest release](https://github.com/Sqzzzzzzz/Cold-Steel-IV-Save-Editor/releases/latest)** and download:
 
 - `Cold_Steel_IV_Inventory_Editor_v1.0.0_Windows_x64.zip` — the complete application.
 - `SHA256SUMS.txt` — the archive checksum.
@@ -118,14 +118,14 @@ Normal and EX versions share the corresponding master's image.
 | Overwrite is blocked | The source may have changed since loading; save a separate copy and reload deliberately |
 | EXE does not start | Extract the ZIP first; use the x64 build; check Windows Security history and report the exact message |
 
-Report reproducible problems in [Issues](https://github.com/Sqzzzzzzz/Cold-Steel-IV-Save-Editor./issues). Include the version, Windows version, steps and a screenshot. Do not attach personal saves or copyrighted game tables publicly.
+Report reproducible problems in [Issues](https://github.com/Sqzzzzzzz/Cold-Steel-IV-Save-Editor/issues). Include the version, Windows version, steps and a screenshot. Do not attach personal saves or copyrighted game tables publicly.
 
 ## Development
 
 Use 64-bit **Python 3.10–3.14**; release builds use Python 3.14.
 
 ```powershell
-git clone https://github.com/Sqzzzzzzz/Cold-Steel-IV-Save-Editor..git Cold-Steel-IV-Save-Editor
+git clone https://github.com/Sqzzzzzzz/Cold-Steel-IV-Save-Editor.git Cold-Steel-IV-Save-Editor
 cd Cold-Steel-IV-Save-Editor
 py -3.14 -m venv .qt-preview-venv
 .\.qt-preview-venv\Scripts\python.exe -m pip install -r requirements-release.txt

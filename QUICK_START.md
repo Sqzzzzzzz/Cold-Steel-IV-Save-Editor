@@ -19,6 +19,6 @@ Switch EN/RU at the top of the window. If a localization patch replaced the Engl
 The EXE is unsigned. Verify the ZIP SHA-256 against the separate `SHA256SUMS.txt` downloaded from the same release. Do not disable security software to run an unverified download.
 
 Documentation, updates and issues:
-https://github.com/Sqzzzzzzz/Cold-Steel-IV-Save-Editor.
+https://github.com/Sqzzzzzzz/Cold-Steel-IV-Save-Editor
 
 The project's MIT license does not cover bundled third-party libraries or game artwork. See LICENSE, THIRD_PARTY_NOTICES.md and LICENSES/.
