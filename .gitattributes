@@ -2,8 +2,12 @@
 *.py text eol=lf
 *.md text eol=lf
 *.json text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
 *.sh text eol=lf
 *.bat text eol=crlf
 *.png binary
 *.jpg binary
 *.ico binary
+# Preserve upstream license bytes so their provenance hashes survive checkout.
+licenses/** -text
