@@ -1,0 +1,8 @@
+# Verified Windows release toolchain. Runtime/development ranges remain separate.
+-r requirements-dev.txt
+PySide6-Essentials==6.11.3
+Pillow==12.3.0
+pytest==9.2.0
+pyinstaller==6.22.3
+pyinstaller-hooks-contrib==2026.9
+pefile==2024.8.26

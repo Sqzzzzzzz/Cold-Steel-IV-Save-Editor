@@ -33,6 +33,13 @@ def test_profile_catalog_settings_and_icons_are_isolated_from_cs3(tmp_path,monke
     assert not (config_dir()/'catalog_scanned.json').exists()
 
 
+def test_malformed_character_cache_does_not_prevent_startup(core):
+    path=config_dir()/'catalog_scanned.json'
+    path.write_text(json.dumps({'items':[{'id':42,'name':'Weapon','category':'weapon','character':[]}]}),encoding='utf-8')
+    recovered=EditorCore()
+    assert recovered.base=={} and recovered.catalog=={}
+
+
 def test_undo_edit_changes_and_reset(core):
     before=core.save.bytes();changes=EditChanges();changes.refresh(core.save)
     core.change({20:8,21:0,65000:2});changes.refresh(core.save)

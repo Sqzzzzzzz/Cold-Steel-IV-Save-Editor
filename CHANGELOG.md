@@ -1,5 +1,27 @@
 # Changelog / История изменений
 
+## 1.0.0 — 2026-11-05
+
+**English**
+
+- First stable release following the owner's in-game save/load and inventory verification.
+- Preserve the interface while reusing table cells, category nodes, localized search text and shared icon resources.
+- Fix update-state recovery after exceptions and duplicate ownership-filter refreshes.
+- Release closed change-review dialogs and quantity menus; reject malformed JSON character metadata.
+- Tie the deferred startup timer to its window to prevent a confirmed shutdown crash.
+- Add a checked Windows x64 build, EXE version metadata, bilingual end-user instructions, dependency notices and archive checksums.
+- Add Windows CI for Python 3.10/3.14 and verified tag-based GitHub releases.
+
+**Русский**
+
+- Первый стабильный релиз после подтверждённой владельцем проверки загрузки сохранения и предметов в игре.
+- Сохранено оформление; повторно используются ячейки, категории, текст поиска и общие ресурсы иконок.
+- Исправлены восстановление таблицы после исключения и двойное обновление фильтров наличия.
+- Удаляются закрытые окна просмотра правок и меню количества; отклоняются повреждённые метаданные персонажа в JSON.
+- Отложенный таймер запуска принадлежит окну: устранён подтверждённый сбой завершения.
+- Добавлены проверенная Windows x64-сборка, версия EXE, инструкции RU/EN, сторонние лицензии и контрольные суммы.
+- Добавлены Windows CI для Python 3.10/3.14 и проверяемые релизы по тегам.
+
 ## 0.1.2-preview — 2026-11-04
 
 **Русский**

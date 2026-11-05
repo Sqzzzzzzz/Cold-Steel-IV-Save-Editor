@@ -135,3 +135,10 @@ def test_small_stock_dlc_tables_are_recognized_as_english():
     from catalog_locale import catalog_locale
     assert catalog_locale({3805:{'name':'Qilin Dress','description':'Eastern-style outfit.'}})=='en'
     assert catalog_locale({3805:{'name':'Qilin Dress','description':'Платье в восточном стиле.'}})=='ru'
+@pytest.mark.parametrize('character',[[],{},'10',True,-1,65536])
+def test_invalid_json_character_is_rejected(tmp_path,character):
+    import json
+    from catalog_core import load_catalog_json
+    path=tmp_path/'catalog.json'
+    path.write_text(json.dumps({'items':[{'id':42,'name':'Weapon','category':'weapon','character':character}]}),encoding='utf-8')
+    with pytest.raises(ValueError,match='персонаж'):load_catalog_json(path)

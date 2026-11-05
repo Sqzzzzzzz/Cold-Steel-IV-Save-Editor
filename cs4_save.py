@@ -6,7 +6,7 @@ Only NISA PC GameData (3, 2), 6144 inventory slots, is supported.
 No external libraries are required.
 
 Edits preserve all bytes outside inventory and the four-byte CRC field.
-In-game acceptance still requires a test with the owner's installed game.
+The owner confirmed in-game loading and inventory correctness before v1.0.0.
 """
 from __future__ import annotations
 

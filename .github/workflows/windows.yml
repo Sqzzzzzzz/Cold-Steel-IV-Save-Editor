@@ -1,0 +1,99 @@
+name: Windows release
+
+on:
+  push:
+    branches: [main]
+    tags: ['v[0-9]*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: windows-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref_type != 'tag' }}
+
+jobs:
+  test:
+    runs-on: windows-2022
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ['3.10', '3.14']
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: ${{ matrix.python }}
+          architecture: x64
+      - name: Install test dependencies
+        run: python -m pip install -r requirements-dev.txt
+      - name: Validate version and run tests
+        run: |
+          python tools/build_release.py --check-version
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -m pytest -q
+
+  build:
+    needs: test
+    runs-on: windows-2022
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.14'
+          architecture: x64
+      - name: Install verified release dependencies
+        run: python -m pip install -r requirements-release.txt
+      - name: Build, verify and package Windows executable
+        run: python tools/build_release.py
+      - name: Upload verified distribution
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: windows-release
+          path: |
+            release/Cold_Steel_IV_Inventory_Editor_v*_Windows_x64.zip
+            release/SHA256SUMS.txt
+          if-no-files-found: error
+          retention-days: 14
+
+  publish:
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    needs: [test, build]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: windows-release
+          path: release
+      - name: Verify and publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          VERSION="$(cat VERSION.txt | tr -d '\r\n')"
+          test "$RELEASE_TAG" = "v$VERSION"
+          ARCHIVE="Cold_Steel_IV_Inventory_Editor_v${VERSION}_Windows_x64.zip"
+          (cd release && sha256sum --check SHA256SUMS.txt)
+          gh api "repos/$GH_REPO/releases?per_page=100" > "$RUNNER_TEMP/releases.json"
+          python -c 'import json,os; data=json.load(open(os.environ["RUNNER_TEMP"]+"/releases.json")); assert not any(r["tag_name"]==os.environ["RELEASE_TAG"] for r in data), "Release already exists; refusing to overwrite it"'
+          gh release create "$RELEASE_TAG" "release/$ARCHIVE" release/SHA256SUMS.txt --verify-tag --draft --title "Cold Steel IV Inventory Editor v$VERSION — Stable Release" --notes-file "docs/releases/v$VERSION.md"
+          gh release download "$RELEASE_TAG" --dir "$RUNNER_TEMP/release-verify"
+          (cd "$RUNNER_TEMP/release-verify" && sha256sum --check SHA256SUMS.txt)
+          gh release edit "$RELEASE_TAG" --draft=false --latest

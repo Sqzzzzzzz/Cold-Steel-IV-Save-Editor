@@ -231,6 +231,8 @@ def load_catalog_json(path: str | Path) -> dict[int, dict]:
             raise ValueError('Неверное описание в JSON-каталоге')
         if 'category' in row and (not isinstance(row['category'],str) or row['category'] not in CATEGORY_TO_GROUP):
             raise ValueError('Неизвестная категория в JSON-каталоге')
+        if 'character' in row and (type(row['character']) is not int or not 0<=row['character']<=65535):
+            raise ValueError('Некорректный персонаж в JSON-каталоге')
         stats=row.get('stats',{})
         if not isinstance(stats,dict) or any(k not in ('STR','DEF','ATS','ADF','ACC','EVA','SPD','MOV','HP','EP') or
                 type(v) is not int or not -(2**31)<=v<2**31 for k,v in stats.items()):

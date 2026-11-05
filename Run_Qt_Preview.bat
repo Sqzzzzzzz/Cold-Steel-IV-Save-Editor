@@ -3,7 +3,7 @@ setlocal
 cd /d "%~dp0"
 where py >nul 2>nul
 if errorlevel 1 goto no_python
-py -3 -c "import sys; sys.exit(sys.version_info < (3,10))"
+py -3 -c "import sys; sys.exit(sys.version_info < (3,10) or sys.version_info >= (3,15))"
 if errorlevel 1 goto no_python
 if not exist ".qt-preview-venv\Scripts\python.exe" (
   py -3 -m venv ".qt-preview-venv"
@@ -16,7 +16,7 @@ python qt_window.py %*
 if errorlevel 1 goto failed
 exit /b 0
 :no_python
-echo Python 3.10 or later is required.
+echo Python 3.10 through 3.14 is required.
 pause
 exit /b 1
 :failed
