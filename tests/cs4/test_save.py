@@ -52,7 +52,39 @@ def test_add_remove_change_crc_and_preserve_unrelated_data():
     s.reset();assert s.bytes()==raw and not s.changed
 
 
-@pytest.mark.parametrize('changes',[{True:2},{-1:1},{65536:1},{9999:1},{20:True},{20:100},{20:-1},{20:'3'},{20:7,21:100}])
+@pytest.mark.parametrize('empty_active_inventory', [False, True])
+def test_ng_plus_edits_only_active_inventory(ng_plus_save_bytes, empty_active_inventory):
+    raw = ng_plus_save_bytes
+    if empty_active_inventory:
+        data = bytearray(raw)
+        data[TABLE_OFFSET:0x46F1C] = struct.pack('<H30x', EMPTY_ID) * 2048
+        raw = refresh_crc(data)
+    save = CS4Save(raw)
+    assert save.get_quantity(20) == (0 if empty_active_inventory else 15)
+    assert save.get_quantity(60) == (0 if empty_active_inventory else 268)
+    assert save.get_quantity(3229) == 0
+    assert save.bytes() == raw
+
+    changes = {20: 7, 21: 0, 60: 999, 3229: 1}
+    save.set_quantities(changes)
+    edited = save.bytes()
+    reopened = CS4Save(edited)
+    assert all(reopened.get_quantity(item_id) == quantity for item_id, quantity in changes.items())
+    assert edited[:12] == raw[:12]
+    assert edited[16:TABLE_OFFSET] == raw[16:TABLE_OFFSET]
+    assert edited[0x46F1C:] == raw[0x46F1C:]
+    assert get_diff_summary(raw, edited)['other_changed_bytes'] == 0
+
+
+def test_compare_counts_changes_to_carryover_as_outside_active_inventory(ng_plus_save_bytes):
+    data = bytearray(ng_plus_save_bytes)
+    struct.pack_into('<H', data, 0x46F1C + 2, 81)
+    assert get_diff_summary(ng_plus_save_bytes, refresh_crc(data)) == {
+        'added': [], 'removed': [], 'modified': [], 'other_changed_bytes': 1,
+    }
+
+
+@pytest.mark.parametrize('changes',[{True:2},{-1:1},{65536:1},{9999:1},{20:True},{20:100},{20:-1},{20:'3'},{20:7,21:100},{20:7,60:1000}])
 def test_invalid_batch_is_atomic(changes):
     s=CS4Save(synthetic_demo_save());before=s.bytes()
     with pytest.raises((ValueError,TypeError)):s.set_quantities(changes)

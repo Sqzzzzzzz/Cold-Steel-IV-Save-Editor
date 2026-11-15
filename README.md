@@ -2,7 +2,7 @@
 
 # Cold Steel IV · Inventory Editor
 
-[![Release](https://img.shields.io/badge/release-v1.0.0-b8212f)](https://github.com/Sqzzzzzzz/Cold-Steel-IV-Save-Editor/releases/latest)
+[![Release](https://img.shields.io/badge/release-v1.0.1-b8212f)](https://github.com/Sqzzzzzzz/Cold-Steel-IV-Save-Editor/releases/latest)
 ![Windows x64](https://img.shields.io/badge/Windows-x64-3278c8)
 ![RU / EN](https://img.shields.io/badge/interface-RU%20%2F%20EN-8b5cf6)
 
@@ -14,7 +14,8 @@
 
 Редактор инвентаря **Trails of Cold Steel IV — NISA PC** с интерфейсом RU/EN.
 
-- Количество 0–99, добавление, удаление и массовые правки.
+- Добавление, удаление и массовые правки. До 99 единиц предмета и до 999 для U-материала.
+- Поддержка сохранений «Новой игры+» и Clear Data.
 - Поиск, категории, избранное, отмена и резервные копии.
 - Игровые иконки мастер-кварцев, сравнение сохранений и CSV.
 
@@ -34,7 +35,8 @@
 
 An inventory editor for **Trails of Cold Steel IV — NISA PC**, with English and Russian UI.
 
-- Quantities from 0 to 99, add/remove items and batch edits.
+- Add, remove and batch-edit items, up to 99 per item and 999 for U-Material.
+- Support for New Game+ saves and Clear Data.
 - Search, categories, favorites, undo and backups.
 - Native master-quartz artwork, save comparison and CSV export.
 

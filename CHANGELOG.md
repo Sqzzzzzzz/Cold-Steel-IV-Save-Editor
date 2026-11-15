@@ -1,5 +1,10 @@
 # Changelog / История изменений
 
+## 1.0.1 — 2026-11-15
+
+- Open NISA PC New Game+ saves and Clear Data. Edit the active inventory while preserving carryover data. U-Material supports quantities up to 999, and Latest save also checks autosaves.
+- Открываются сохранения «Новой игры+» и Clear Data для NISA PC. Правки затрагивают текущий инвентарь и сохраняют данные переноса. Для U-материала доступно до 999 единиц, а «Последнее сохранение» учитывает автосохранения.
+
 ## 1.0.0 — 2026-11-05
 
 **English**

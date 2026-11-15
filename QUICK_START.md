@@ -5,7 +5,7 @@ English · Русский: QUICK_START_RU.md
 1. Extract the entire ZIP and run `CS4_Inventory_Editor.exe`. Python is not required.
 2. Close the game and back up your saves outside its save directory.
 3. Select your NISA PC game installation root containing `data`, or use automatic discovery.
-4. Open a compatible `saveXXX.dat`, select an item, enter its quantity and click **Apply quantity**.
+4. Open a compatible `saveXXX.dat` or `autosaveNN.dat`, select an item, enter its quantity and click **Apply quantity**.
 5. Review the changes and choose **Save a copy…** before overwriting any original.
 6. If needed, place the edited copy in the game's save directory under a game-recognized `saveXXX.dat` name. Keep the original backup.
 

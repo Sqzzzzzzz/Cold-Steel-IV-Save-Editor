@@ -7,6 +7,7 @@ PAIRS={
     'Open a compatible save first':'Сначала откройте совместимое сохранение',
     'Save not loaded':'Сохранение не загружено',
     'No save loaded':'Сохранение не загружено',
+    'No compatible save files found.':'Совместимые файлы сохранений не найдены.',
     'Use overwrite with backup for source file':'Для исходного файла используйте запись с резервной копией',
     'The destination exists. Pick a different filename.':'Файл уже существует. Выберите другое имя.',
     'The original save was modified after loading; write cancelled':'Исходное сохранение изменилось после открытия; запись отменена',
@@ -24,7 +25,6 @@ EXACT={
     'Обнаружены предметы после пустых слотов — неизвестная структура инвентаря':'Items were found after empty slots; unsupported inventory structure',
     'Не найдена достаточная область свободных слотов инвентаря':'Not enough empty inventory slots were found',
     'ID предмета должен быть числом от 0 до 65535, кроме 9999':'Item ID must be an integer from 0 to 65535, excluding 9999',
-    'Количество должно быть в диапазоне 0–99':'Quantity must be an integer from 0 to 99',
     'Недостаточно свободных слотов для добавления':'Not enough free slots to add these items',
     'Повреждена строка заголовка таблицы TBL':'Invalid TBL header string',
     'Недопустимый тип записи в TBL':'Invalid TBL record type',
@@ -58,6 +58,7 @@ PATTERNS=[
  (r'Неизвестные данные в записи инвентаря №(\d+); запись отменена',r'Unknown inventory data in slot \1; write cancelled'),
  (r'Слот №(\d+) помечен пустым, но содержит количество (\d+)',r'Slot \1 is marked empty but has quantity \2'),
  (r'Недопустимое количество (\d+) для ID (\d+), слот (\d+)',r'Invalid quantity \1 for ID \2 in slot \3'),
+ (r'Количество должно быть в диапазоне 0–(\d+)',r'Quantity must be an integer from 0 to \1'),
  (r'Дублирующийся ID (\d+) — редактор остановлен',r'Duplicate item ID \1; operation stopped'),
  (r'Неверный UTF-8 для предмета ID (\d+)',r'Invalid UTF-8 for item ID \1'),
  (r'Конфликтующие названия для ID (\d+)',r'Conflicting item names for ID \1'),
@@ -74,7 +75,6 @@ def error_text(error,language):
     value=str(error)
     if language=='ru':
         for en,ru in PAIRS.items():value=value.replace(en,ru)
-        value=value.replace('No compatible saveXXX.dat found.','Совместимые saveXXX.dat не найдены.')
         return value
     for ru,en in sorted(EXACT.items(),key=lambda pair:-len(pair[0])):value=value.replace(ru,en)
     for pattern,replacement in PATTERNS:value=re.sub(pattern,replacement,value)

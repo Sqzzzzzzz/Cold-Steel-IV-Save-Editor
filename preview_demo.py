@@ -9,7 +9,7 @@ from collections import deque
 from pathlib import Path
 import tempfile
 
-from cs4_save import save_checksum, CS4Save, SAVE_SIZE, TABLE_OFFSET, TABLE_END, RECORD_SIZE, RECORD_COUNT, EMPTY_ID
+from cs4_save import save_checksum, CS4Save, SAVE_SIZE, TABLE_OFFSET, RECORD_SIZE, INVENTORY_STORAGE_SLOTS, EMPTY_ID
 from qt_backend import EditorCore
 
 
@@ -78,7 +78,8 @@ def demo_catalog():
 def synthetic_demo_save():
     data=bytearray(SAVE_SIZE)
     data[:8]=bytes.fromhex('03 00 00 00 02 00 00 00');data[8:12]=SAVE_SIZE.to_bytes(4,'little')
-    data[TABLE_OFFSET:TABLE_END]=(EMPTY_ID.to_bytes(2,'little')+bytes(RECORD_SIZE-2))*RECORD_COUNT
+    storage_end = TABLE_OFFSET + RECORD_SIZE * INVENTORY_STORAGE_SLOTS
+    data[TABLE_OFFSET:storage_end] = (EMPTY_ID.to_bytes(2, 'little') + bytes(RECORD_SIZE - 2)) * INVENTORY_STORAGE_SLOTS
     entries=[(3200,1),(3201,1),(3202,1),(3207,1),(3209,1),(3212,1),(3215,1),
              (3217,1),(3220,1),(3223,1),(3227,1),(3350,2),(3354,3),
              (20,15),(21,8),(60,24),(1200,1),(420,2),(500,2),(600,1),(3022,6),(3100,12)]

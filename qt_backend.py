@@ -201,7 +201,7 @@ class EditorCore:
 
     def latest(self):
         match,warnings=newest_compatible_save(save_directories(self.settings.get('save_directory')))
-        if match is None: raise FileNotFoundError('No compatible saveXXX.dat found. '+'; '.join(warnings[:2]))
+        if match is None: raise FileNotFoundError('No compatible save files found. '+'; '.join(warnings[:2]))
         self._accept_save(match.path,match.save)
         return match.path
 

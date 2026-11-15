@@ -44,6 +44,28 @@ def test_real_widgets_edit_undo_and_language(window,app):
     assert w.cat_table.horizontalHeader().sectionsMovable() is False
 
 
+def test_ng_plus_material_quantity_is_shown_and_editable(window, app, tmp_path, ng_plus_save_bytes):
+    source = tmp_path / 'save002.dat'
+    source.write_bytes(ng_plus_save_bytes)
+    window.core.open_file(source)
+    window.show_item(60)
+    assert window.qty.maximum() == 999 and window.qty.value() == 268
+    assert '999' in window.qty_caption.toolTip() and not window.has_pending_quantity()
+
+    window.qty.setValue(812)
+    window.lang.setCurrentIndex(1)
+    app.processEvents()
+    assert window.qty.value() == 812 and window.has_pending_quantity()
+    assert window.qty_caption.toolTip() == 'Allowed quantity: 0 to 999'
+    window.apply_single()
+    assert window.core.quantity(60) == 812
+    assert window.core.save.bytes()[0x46F1C:] == ng_plus_save_bytes[0x46F1C:]
+
+    window.show_item(20)
+    assert window.qty.maximum() == 99 and window.qty.value() == 15
+    assert window.qty_caption.toolTip() == 'Allowed quantity: 0 to 99'
+
+
 def test_navigation_sorting_and_search_do_not_modify_save(window,app):
     w=window;before=w.core.save.bytes()
     for section in ('tools','inventory','catalog'):

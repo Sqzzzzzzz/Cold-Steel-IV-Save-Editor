@@ -2,10 +2,11 @@
 
 Layout checked against the public SAVE.pc regression fixture from
 ItsAllAboutTheCode/save-converters. CRC follows SenPatcher Save.Checksum.Fix.
-Only NISA PC GameData (3, 2), 6144 inventory slots, is supported.
+Only NISA PC GameData (3, 2) is supported.
 No external libraries are required.
 
-Edits preserve all bytes outside inventory and the four-byte CRC field.
+Edits preserve all bytes outside the active inventory and four-byte CRC field,
+including the separate inventory stored for New Game Plus carryover.
 The owner confirmed in-game loading and inventory correctness before v1.0.0.
 """
 from __future__ import annotations
@@ -19,11 +20,17 @@ from catalog_visibility import NON_INVENTORY_ITEM_IDS
 SAVE_SIZE = 0x1656A8  # 1,463,976 bytes, NISA PC GameData (3, 2)
 TABLE_OFFSET = 0x36F1C
 RECORD_SIZE = 32
-RECORD_COUNT = 6144
-TABLE_END = TABLE_OFFSET + RECORD_SIZE * RECORD_COUNT  # 0x66F1C
+RECORD_COUNT = 2048
+TABLE_END = TABLE_OFFSET + RECORD_SIZE * RECORD_COUNT  # 0x46F1C
+INVENTORY_STORAGE_SLOTS = 6144  # Includes the additional stored inventories.
 EMPTY_ID = 9999
-MAX_QUANTITY = 99  # seen in provided save files; conservative game UI stack cap
+MAX_QUANTITY = 99
 MAX_ITEM_ID = 65535
+
+
+def max_quantity(item_id: int | None) -> int:
+    # U-Material (ID 60) stacks to 999 in CS4.
+    return 999 if item_id == 60 else MAX_QUANTITY
 
 
 def save_checksum(data: bytes | bytearray) -> int:
@@ -104,7 +111,7 @@ class CS4Save:
                 continue
             if empty_started:
                 raise SaveFormatError('Обнаружены предметы после пустых слотов — неизвестная структура инвентаря')
-            if not 1 <= qty <= MAX_QUANTITY:
+            if not 1 <= qty <= max_quantity(item_id):
                 raise SaveFormatError(f'Недопустимое количество {qty} для ID {item_id}, слот {slot}')
             if item_id in seen:
                 raise SaveFormatError(f'Дублирующийся ID {item_id} — редактор остановлен')
@@ -171,8 +178,9 @@ class CS4Save:
         for item_id, qty in changes.items():
             if type(item_id) is not int or not 0 <= item_id <= MAX_ITEM_ID or item_id == EMPTY_ID:
                 raise ValueError('ID предмета должен быть числом от 0 до 65535, кроме 9999')
-            if type(qty) is not int or not 0 <= qty <= MAX_QUANTITY:
-                raise ValueError(f'Количество должно быть в диапазоне 0–{MAX_QUANTITY}')
+            limit = max_quantity(item_id)
+            if type(qty) is not int or not 0 <= qty <= limit:
+                raise ValueError(f'Количество должно быть в диапазоне 0–{limit}')
             if item_id in NON_INVENTORY_ITEM_IDS and qty > 0:
                 raise ValueError('ID 249 нельзя добавлять в обычный инвентарь; существующую запись можно удалить количеством 0')
         old = self.items()

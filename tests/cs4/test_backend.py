@@ -1,6 +1,7 @@
 from pathlib import Path
 import hashlib
 import json
+import os
 import pytest
 from beta_config import seed_beta_profile
 from catalog_core import user_catalog_path,save_catalog_json
@@ -99,6 +100,30 @@ def test_auto_latest_skips_wrong_game_and_bad_crc(tmp_path,monkeypatch):
     assert save_directories(home=home)==[folder]
     match,warnings=newest_compatible_save([folder])
     assert match.path==good.resolve() and warnings
+
+
+def test_latest_opens_ng_plus_autosave(core, tmp_path, monkeypatch, ng_plus_save_bytes):
+    folder = tmp_path / 'autosaves'
+    folder.mkdir()
+    valid = folder / 'autosave04.dat'
+    newest_invalid = folder / 'autosave05.dat'
+    sidecar = folder / 'autosave05_t.dat'
+    valid.write_bytes(ng_plus_save_bytes)
+    sidecar.write_bytes(ng_plus_save_bytes)
+    corrupt = bytearray(ng_plus_save_bytes)
+    corrupt[-1] ^= 1
+    newest_invalid.write_bytes(corrupt)
+    for path, mtime in ((valid, 1000), (newest_invalid, 2000), (sidecar, 3000)):
+        os.utime(path, (mtime, mtime))
+    monkeypatch.setattr('qt_backend.save_directories', lambda _: [folder])
+
+    assert core.latest() == valid.resolve()
+    assert core.quantity(20) == 15 and core.quantity(60) == 268
+    core.change({20: 25})
+    copy = core.save_copy(tmp_path / 'edited.dat')
+    assert CS4Save.from_file(copy).get_quantity(20) == 25
+    assert copy.read_bytes()[0x46F1C:] == ng_plus_save_bytes[0x46F1C:]
+    assert valid.read_bytes() == ng_plus_save_bytes
 
 
 def test_actual_cs4_install_and_localized_table_scan(tmp_path,core):

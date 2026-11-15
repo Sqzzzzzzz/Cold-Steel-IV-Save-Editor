@@ -25,6 +25,7 @@ from categories import GROUPS, CATEGORY_NAMES, category_of, item_in_category
 from game_icons import icon_cache_dir, icon_file_for_item
 from game_scan import find_game_install, scan_game_tables
 from qt_backend import EditorCore
+from cs4_save import MAX_QUANTITY, max_quantity
 from edit_changes import EditChanges
 from original_item_icons import original_icon_for_item
 from qt_first_launch import FirstLaunchPage
@@ -507,7 +508,7 @@ class MainWindow(QMainWindow):
         labels.addWidget(self.id_caption,1);labels.addWidget(self.qty_caption,1);identity.addLayout(labels)
         nums=QHBoxLayout();nums.setSpacing(8)
         self.id_field=QLineEdit();self.id_field.setReadOnly(True);self.id_field.setFixedHeight(36)
-        self.qty=QSpinBox();self.qty.setRange(0,99);self.qty.setFixedHeight(36)
+        self.qty=QSpinBox();self.qty.setRange(0,MAX_QUANTITY);self.qty.setFixedHeight(36)
         # Native spin-box size hints must not consume the adjacent ID field.
         for field in (self.id_field,self.qty):
             field.setSizePolicy(QSizePolicy.Policy.Ignored,QSizePolicy.Policy.Fixed)
@@ -666,8 +667,6 @@ class MainWindow(QMainWindow):
         self.add_bulk.setText(t('Добавить выбранные','Apply to selected'))
         self.del_bulk.setText(t('Удалить выбранные','Remove selected'))
         self.detail_title.setText(t('ВЫБРАННЫЙ ПРЕДМЕТ','SELECTED ITEM'))
-        self.id_caption.setText(t('ID предмета','Item ID'))
-        self.qty_caption.setText(t('Количество (0–99)','Quantity (0–99)'))
         self.apply_btn.setText(t('Применить количество','Apply quantity'))
         self.delete_btn.setText(t('Удалить предмет из сохранения','Delete from save'))
         self.undo_btn.setText(t('Отменить','Undo'))
@@ -726,7 +725,6 @@ class MainWindow(QMainWindow):
         for i,value in enumerate((62,109,82) if compact else (70,133,108),start=1):self.inv_table.setColumnWidth(i,value)
         for table in (self.cat_table,self.inv_table):table.verticalHeader().setDefaultSectionSize(30)
         self.footer_row.layout().setContentsMargins(rail+8,2,4,0)
-        self.qty_caption.setToolTip(self.msg('Допустимое количество: от 0 до 99','Allowed quantity: 0 to 99'))
         self.btn_latest.setToolTip(self.msg('Открыть последнее сохранение (F5)','Open latest save (F5)'))
         self.btn_open.setToolTip(self.msg('Открыть файл сохранения (Ctrl+O)','Open save file (Ctrl+O)'))
         self.btn_compare.setToolTip(self.msg('Сравнить сохранения','Compare saves'))
@@ -735,16 +733,10 @@ class MainWindow(QMainWindow):
         self.big_icon.setFixedSize(74 if compact else 92,104 if compact else 112)
         self.detail.layout().setSpacing(3 if self.height()<800 else 7)
         self.detail.layout().setContentsMargins(18 if self.height()<800 else 22,10 if self.height()<800 else 15,18 if self.height()<800 else 22,16 if self.height()<800 else 25)
-        margins=self.detail.layout().contentsMargins()
-        field_width=(detail-margins.left()-margins.right()-self.big_icon.width()-14-8)//2
         for field,text,padding in ((self.id_field,'65535',18),(self.qty,'99',36)):
             field.ensurePolished()
             field.setMinimumWidth(field.fontMetrics().horizontalAdvance(text)+padding)
-        for caption,full,brief in (
-                (self.id_caption,self.msg('ID предмета','Item ID'),'ID'),
-                (self.qty_caption,self.msg('Количество (0–99)','Quantity (0–99)'),self.msg('Кол-во','Qty'))):
-            caption.ensurePolished()
-            caption.setText(brief if compact or caption.fontMetrics().horizontalAdvance(full)>field_width else full)
+        self._update_field_captions()
         for button in (self.apply_btn,self.delete_btn,self.undo_btn,self.reset_btn):
             button.setFixedHeight(40 if self.height()<800 else 48)
         self.reset_btn.setText(self.msg('Сбросить','Reset') if compact else self.msg('Сбросить правки','Reset edits'))
@@ -752,6 +744,18 @@ class MainWindow(QMainWindow):
         if self.active_item_id is not None:
             ico=self._icon(self.active_item_id,self.core.catalog.get(self.active_item_id,{}))
             self._set_big_icon(ico,72 if compact else 90)
+
+    def _update_field_captions(self):
+        compact = self.width() < 1460
+        margins = self.detail.layout().contentsMargins()
+        field_width = (self.detail.width() - margins.left() - margins.right() - self.big_icon.width() - 14 - 8) // 2
+        limit = self.qty.maximum()
+        self.qty_caption.setToolTip(self.msg(f'Допустимое количество: от 0 до {limit}', f'Allowed quantity: 0 to {limit}'))
+        for caption, full, brief in (
+                (self.id_caption, self.msg('ID предмета', 'Item ID'), 'ID'),
+                (self.qty_caption, self.msg(f'Количество (0–{limit})', f'Quantity (0–{limit})'), self.msg('Кол-во', 'Qty'))):
+            caption.ensurePolished()
+            caption.setText(brief if compact or caption.fontMetrics().horizontalAdvance(full) > field_width else full)
 
     def _refresh_section_headers(self):
         self.rail_header.setCaption(self.msg('НАВИГАЦИЯ','NAVIGATION'))
@@ -1031,6 +1035,11 @@ class MainWindow(QMainWindow):
     def show_item(self,iid):
         self.active_item_id=iid
         self._quantity_user_edited=False
+        limit = max_quantity(iid)
+        if self.qty.maximum() != limit:
+            with QSignalBlocker(self.qty):
+                self.qty.setMaximum(limit)
+            self._update_field_captions()
         self.apply_btn.setEnabled(self.core.save is not None and iid is not None and iid not in NON_INVENTORY_ITEM_IDS)
         self.qty.setEnabled(iid not in NON_INVENTORY_ITEM_IDS)
         self.delete_btn.setEnabled(self.core.save is not None and iid is not None)
@@ -1169,7 +1178,7 @@ class MainWindow(QMainWindow):
     def open_save_dialog(self):
         if not self.confirm_dirty():return
         filename,_=QFileDialog.getOpenFileName(self,self.msg('Открыть сохранение','Open save'),
-                           self.core.settings.get('save_directory',''), 'Cold Steel IV saves (save*.dat);;Data files (*.dat)')
+                           self.core.settings.get('save_directory',''), 'Cold Steel IV saves (save*.dat autosave??.dat);;Data files (*.dat)')
         if filename:
             if self._handle(lambda:self.core.open_file(filename)):
                 self.active_item_id=None

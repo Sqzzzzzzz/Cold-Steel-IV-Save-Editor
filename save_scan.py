@@ -8,7 +8,7 @@ from typing import Iterable
 
 from cs4_save import CS4Save, SAVE_SIZE, SaveFormatError
 
-SAVE_NAME = re.compile(r'^save\d{3,4}\.dat$', re.IGNORECASE)
+SAVE_NAME = re.compile(r'(?:save\d{3,4}|autosave\d{2})\.dat', re.IGNORECASE)
 
 
 @dataclass(frozen=True)
